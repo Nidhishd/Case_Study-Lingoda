@@ -1,0 +1,93 @@
+# Symfony App Deployment
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: symfony-demo
+  namespace: case-study
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: symfony-demo
+  template:
+    metadata:
+      labels:
+        app: symfony-demo
+    spec:
+      containers:
+      - name: symfony-demo
+        image: nidhishd/symfony-demo3:latest
+        ports:
+        - containerPort: 8000 
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: DATABASE_URL    
+      initContainers:
+      - name: migration
+        image: php:latest
+        command: ["sh", "-c", "migration_script.sh"]
+        volumeMounts:
+        - name: migrations
+          mountPath: /migrations
+      volumes:
+      - name: migrations
+        persistentVolumeClaim:
+          claimName: migrations         
+
+---
+
+# Database Deployment (MySQL Example)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-db
+  namespace: case-study
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-db
+  template:
+    metadata:
+      labels:
+        app: mysql-db
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:latest
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+             secretKeyRef:
+              name: mysql-credentials
+               key: mysql-root-password
+        - name: MYSQL_DATABASE
+          valueFrom:
+             secretKeyRef:
+              name: mysql-credentials
+               key: db-name
+        - name: MYSQL_USER
+           valueFrom:
+            secretKeyRef:
+              name: mysql-credentials
+               key: db-user
+         - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+               name: mysql-credentials
+              key: db-password
+          
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-data
+        emptyDir: {}
+

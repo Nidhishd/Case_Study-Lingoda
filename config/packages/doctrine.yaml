@@ -1,0 +1,22 @@
+doctrine:
+    dbal:
+        # Choose your database driver
+        # Options include: pdo_mysql, pdo_pgsql, pdo_sqlite, ...
+        driver: pdo_mysql
+
+        # Database connection parameters
+        host: "%env(resolve:DATABASE_HOST)%"
+        port: "%env(resolve:DATABASE_PORT)%"
+        dbname: "%env(resolve:DATABASE_NAME)%"
+        user: "%env(resolve:DATABASE_USER)%"
+        password: "%env(resolve:DATABASE_PASSWORD)%"
+
+        # Set other options as needed
+        charset: utf8mb4
+        # other options...
+
+    orm:
+        # Configure the ORM
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true

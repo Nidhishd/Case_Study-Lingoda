@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: symfony-demo-service
+  namespace: case-study
+spec:
+  selector:
+    app: symfony-demo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: case-study
+spec:
+  selector:
+    app: mysql-db
+  ports:
+    - protocol: TCP
+      port: 3306
