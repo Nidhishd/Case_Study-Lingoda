@@ -1,3 +1,3 @@
-Lingoda Case Study
+# Lingoda Case Study
 
-Documentation with all steps and instructions are shared as pdf.
+Documentation with all steps and instructions is shared as pdf.
