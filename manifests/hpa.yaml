@@ -1,7 +1,7 @@
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: my-app-hpa
+  name: myapp-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -14,3 +14,15 @@ spec:
     resource:
       name: cpu
       targetAverageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 70
+  - type: Pods
+    pods:
+      metricName: http_response_time
+      targetAverageValue: 0.5s
+  - type: Pods
+    pods:
+      metricName: http_requests_per_second
+      targetAverageValue: 100
